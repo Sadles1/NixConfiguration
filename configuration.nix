@@ -66,8 +66,6 @@
       config = {
         user.name = "sadles";
 	user.email = "seledkov.vitaliy@gmail.com";
-	init.defaultBranch = "main";
-	pull.rebase = true;
       };
     };
     steam.enable = true;
