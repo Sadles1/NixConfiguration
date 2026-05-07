@@ -2,7 +2,4 @@
 
 {
 	programs.mango.enable = true;
-	wayland.windowManager.mango = {
-		enable = true;
-	};
 }
