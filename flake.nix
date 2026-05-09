@@ -16,7 +16,7 @@
 				./configuration.nix
 				home-manager.nixosModules.home-manager
 				{
-					home-manager.users.tony = import ./home.nix
+					home-manager.users.sadles = import ./home.nix;
 					home-manager.backupFileExtension = "backup";
 				}
 			];

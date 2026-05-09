@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let
-	dotfiles = "${config.home.homeDirectory}/nixos-dotfiles/config";
+	dotfiles = "/etc/nixos/config";
 	create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
 
 	configs = {
@@ -11,11 +11,12 @@ in
 {
 	home.username = "sadles";
 	home.homeDirectory = "/home/sadles";
+	home.stateVersion = "25.11";
 	programs.bash = {
-		enable.true;
+		enable = true;
 		shellAliases = {
 			btw = "echo I use nixos-btw";
-		}
+		};
 	};
 
 	xdg.configFile = builtins.mapAttrs
