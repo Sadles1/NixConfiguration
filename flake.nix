@@ -1,7 +1,12 @@
 {
 	inputs = {
 		nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
-		nixpkgs-unstble.url = "github:nixos/nixpkgs/nixos-unstable";		
+		nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
+		niri = {
+			url = "github:niri-wm/niri";
+			inputs.nixpkgs.follows = "nixpkgs-unstable";
+		};
 	};
 
 	outputs = { self, nixpkgs, ...}: {
