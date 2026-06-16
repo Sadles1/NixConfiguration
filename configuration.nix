@@ -1,88 +1,105 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
 {
 	imports = [
 		./hardware-configuration.nix
-		./niri.nix
 	];
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.blacklistedKernelModules = [ "nouveau" ];
+	boot.loader.systemd-boot.enable = true;
+	boot.loader.efi.canTouchEfiVariables = true;
+	boot.blacklistedKernelModules = [ "nouveau" ];
+	
+	hardware.bluetooth = {
+		enable = true;
+		powerOnBoot = true;
+	};
 
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+	hardware.graphics = {
+		enable = true;
+		enable32Bit = true;
+	};
 
-  # Enable networking
-  networking.networkmanager.enable = true;
+	networking.hostName = "nixos";
+	networking.networkmanager.enable = true;
 
-  # Set your time zone.
-  time.timeZone = "Europe/Lisbon";
+	time.timeZone = "Europe/Lisbon";
+	
+	users.users.root.shell = pkgs.zsh;
+	users.users.root.ignoreShellProgramCheck = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.sadles = {
-    isNormalUser = true;
-    description = "sadles";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [];
-  };
+	users.users.sadles = {
+		isNormalUser = true;
+		description = "sadles";
+		extraGroups = [ "wheel" ];
+	};
+	
+	nix.gc = {
+		automatic = true;
+		dates = "weekly";
+		options = "--delete-older-than 5d";
+	};
 
-  # services.xserver.videoDrivers = [ "nvidia" ];
-  # hardware.nvidia.powerManagement.enable = true;
+	nix.optimise = {
+		automatic = true;
+		dates = "weekly";
+	};
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+	services.xserver.enable = true;
+	services.xserver.videoDrivers = [ "amdgpu" ];
+	services.displayManager.ly.enable = true;
+	
+	programs.xwayland.enable = true;
+	programs.niri.enable = true;
+	
+	nixpkgs.config.allowUnfree = true;
 
-  programs = {
-    firefox.enable = true;
-    git = {
-      enable = true;
-      config = {
-        user.name = "sadles";
-	user.email = "seledkov.vitaliy@gmail.com";
-      };
-    };
-  };
+	services.blueman.enable = true;
+	
+	programs.firefox.enable = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-	vim
-	wget
-	alacritty
-	kitty
-	firefox
+	programs.git = {
+		enable = true;
+		config = {
+			user.name = "sadles";
+			user.email = "seledkov.vitaliy@gmail.com";
+		};
+	};
+
+	programs.bazecor.enable = true;
+
+	environment.systemPackages = with pkgs; [
+		wget
+		wl-clipboard
+		swaybg
+		kitty
+		zsh
+		oh-my-posh
+		fzf
+		fuzzel
+		lsd
+		bat
+		btop
+		zoxide
+		fastfetch
+		yazi
+		claude-code
+		qutebrowser
+		gcc
+		clang
+		unzip
+		gnumake
+		ripgrep
+		tree-sitter
+		fd
   ];
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
+	environment.sessionVariables = {
+		ZDOTDIR = "\${HOME}/.config/zsh";
+	};
 
-  # List services that you want to enable:
+	fonts.packages = with pkgs; [
+		nerd-fonts.jetbrains-mono
+	];
 
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.11"; # Did you read the comment?
+	system.stateVersion = "25.11"; # Did you read the comment?
 }

@@ -5,19 +5,20 @@
 
 		home-manager = {
 			url = "github:nix-community/home-manager/release-25.11";
-			inputs.nixpkgs.follows = "nixpkgs";
+			inputs.nixpkgs.follows = "nixpkgs-unstable";
 		};
 	};
 
 	outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, ...}: {
-		nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+		nixosConfigurations.nixos = nixpkgs-unstable.lib.nixosSystem {
 			modules = [
 				{ nix.settings.experimental-features = ["nix-command" "flakes"]; }
 				./configuration.nix
 				home-manager.nixosModules.home-manager
 				{
-					home-manager.users.sadles = import ./home.nix;
-					home-manager.backupFileExtension = "backup";
+					home-manager.users.sadles = import ./home/home.nix;
+					home-manager.users.root = import ./home/home.nix;
+					home-manager.useUserPackages = true;
 				}
 			];
 		};
